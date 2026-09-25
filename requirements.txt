@@ -1,6 +1,0 @@
-pygame-ce>=2.5.5,<3
-pymunk>=7.0,<8
-pygame_gui>=0.6.14,<1
-imageio>=2.37,<3
-imageio-ffmpeg>=0.6,<1
-pyinstaller>=6.10,<7

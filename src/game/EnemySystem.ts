@@ -1,0 +1,16 @@
+import*as THREE from"three";import type{Damageable}from"./types";import type{Player}from"./Player";
+export class EnemySystem{
+readonly enemies:Damageable[]=[];wave=1;private spawnTimer=0;private spawned=0;private target=8;
+constructor(private scene:THREE.Scene,private player:Player,private onKilled:(e:Damageable,indirect:boolean)=>void){this.beginWave(1)}
+beginWave(w:number){this.wave=w;this.spawned=0;this.spawnTimer=.2;this.target=5+w*3+(w===3?1:0)}
+update(dt:number,t:number){if(this.spawned<this.target){this.spawnTimer-=dt;if(this.spawnTimer<=0){this.spawn(this.wave===3&&this.spawned===this.target-1?"boss":this.pick());this.spawned++;this.spawnTimer=.55}}for(const e of[...this.enemies]){if(t<e.frozenUntil)continue;const to=this.player.position.clone().sub(e.mesh.position),dist=to.length();const speed=e.type==="spectre"?4.7:e.type==="kamikaze"?7.5:e.type==="boss"?3.2:3.8;if(dist>1.8){e.velocity.lerp(to.normalize().multiplyScalar(speed),.06);e.mesh.position.addScaledVector(e.velocity,dt);e.mesh.lookAt(this.player.position.x,e.mesh.position.y,this.player.position.z)}else this.player.damage((e.type==="boss"?18:8)*dt*2.2);if(e.type==="spectre")e.mesh.position.y=2.3+Math.sin(t*4+e.mesh.id)*.5;if(e.type==="kamikaze"&&dist<2.1){this.damage(e,999,new THREE.Vector3(),true);this.player.damage(28)}}}
+damage(e:Damageable,a:number,imp=new THREE.Vector3(),indirect=false){if(!e.alive)return false;e.hp-=a;e.velocity.add(imp);if(e.hp>0)return false;e.alive=false;this.scene.remove(e.mesh);const i=this.enemies.indexOf(e);if(i>=0)this.enemies.splice(i,1);this.onKilled(e,indirect);return true}
+freeze(e:Damageable,t:number,s=2.5){e.frozenUntil=Math.max(e.frozenUntil,t+s);const m=e.mesh as THREE.Mesh;if(m.material instanceof THREE.MeshToonMaterial)m.material.color.setHex(0x7bd7ff)}
+radius(c:THREE.Vector3,r:number,dmg:number,imp=8,indirect=false){for(const e of[...this.enemies]){const d=e.mesh.position.distanceTo(c);if(d>r)continue;this.damage(e,dmg*(1-d/r*.45),e.mesh.position.clone().sub(c).normalize().multiplyScalar(imp*(1-d/r)),indirect)}}
+cleared(){return this.spawned>=this.target&&this.enemies.length===0}
+rayTargets(){return this.enemies.map(e=>e.mesh)}
+fromObject(o:THREE.Object3D){return this.enemies.find(e=>e.mesh===o||e.mesh.children.includes(o))}
+reset(){for(const e of this.enemies)this.scene.remove(e.mesh);this.enemies.length=0;this.beginWave(1)}
+private pick(){const r=Math.random();if(this.wave>=2&&r<.28)return"spectre";if(r<.48)return"kamikaze";return"sentinel"}
+private spawn(type:string){const a=Math.random()*Math.PI*2,r=28+Math.random()*8,color=type==="boss"?0xffd54f:type==="spectre"?0x6ee7ff:type==="kamikaze"?0xff4d68:0xa47cff,size=type==="boss"?2.5:type==="spectre"?1.1:1.35;const g=type==="spectre"?new THREE.OctahedronGeometry(size):type==="kamikaze"?new THREE.IcosahedronGeometry(size):new THREE.CapsuleGeometry(size*.55,size*1.2,4,8);const mesh=new THREE.Mesh(g,new THREE.MeshToonMaterial({color,emissive:new THREE.Color(color).multiplyScalar(.12)}));mesh.position.set(Math.cos(a)*r,type==="spectre"?2.3:size,Math.sin(a)*r);this.scene.add(mesh);const hp=type==="boss"?700:type==="sentinel"?100:type==="spectre"?75:48;const e:Damageable={mesh,hp,maxHp:hp,frozenUntil:0,alive:true,type,velocity:new THREE.Vector3()};mesh.userData.enemy=e;this.enemies.push(e)}
+}

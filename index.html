@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#0b0914"><title>Collateral Casters</title></head>
+<body>
+<div id="game"></div>
+<div id="menu" class="menu">
+  <div class="logo-block"><div class="eyebrow">ARCANE DESTRUCTION FPS</div><h1>COLLATERAL<br><span>CASTERS</span></h1><p>Le décor est une arme. Les combos sont le vrai sort.</p></div>
+  <div class="menu-actions"><button id="playBtn" class="primary">ENTRER DANS LE DISTRICT</button><button id="settingsBtn">RÉGLAGES</button><div class="small">ZQSD/WASD • souris • Espace • Shift • F télékinésie • 1–6 sorts</div></div>
+</div>
+<div id="hud" class="hud hidden">
+  <div class="top-left"><div class="district">DISTRICT <span id="district">01</span></div><div class="wave">VAGUE <span id="wave">1</span>/3</div></div>
+  <div class="top-right"><div class="score">CHAOS <span id="score">000000</span></div><div class="indirect">INDIRECT <span id="indirect">0</span></div></div>
+  <div class="crosshair"><i></i><i></i><i></i><i></i></div>
+  <div class="bottom-left"><div class="label">VITALITÉ</div><div class="bar"><div id="hpBar"></div></div><div id="hpText">100 / 100</div></div>
+  <div class="bottom-center"><div id="spellBar" class="spell-bar"></div><div id="comboText" class="combo"></div></div>
+  <div class="bottom-right"><div id="dashText">DASH PRÊT</div><div>F — TÉLÉKINÉSIE</div></div>
+</div>
+<div id="upgrade" class="overlay hidden"><div class="panel"><div class="eyebrow">INTERVAGUE</div><h2>CHOISIS UNE ALTÉRATION</h2><div id="upgradeCards" class="cards"></div></div></div>
+<div id="settings" class="overlay hidden"><div class="panel settings-panel"><h2>RÉGLAGES</h2>
+<label>FOV <span id="fovValue"></span><input id="fov" type="range" min="65" max="115" step="1"></label>
+<label>Sensibilité <span id="sensValue"></span><input id="sens" type="range" min="0.15" max="1.5" step="0.05"></label>
+<label>Qualité <select id="quality"><option value="low">Basse</option><option value="medium">Moyenne</option><option value="high">Élevée</option></select></label>
+<button id="closeSettings" class="primary">VALIDER</button></div></div>
+<div id="death" class="overlay hidden"><div class="panel"><div class="eyebrow">RUN TERMINÉE</div><h2>DISTRICT EFFONDRÉ</h2><p id="deathStats"></p><button id="restartBtn" class="primary">RECOMMENCER</button></div></div>
+<script type="module" src="/src/main.ts"></script>
+</body></html>

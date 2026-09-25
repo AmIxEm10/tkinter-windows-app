@@ -178,7 +178,7 @@ class PhysicsSandbox:
         right = self.camera.x + VIEW_W + margin
         top = self.camera.y - margin
         bottom = self.camera.y + HEIGHT + margin
-        return not (bb.r < left or bb.l > right or bb.t < top or bb.b > bottom)
+        return not (bb.right < left or bb.left > right or bb.top < top or bb.bottom > bottom)
 
     # ---------- setup ----------
 

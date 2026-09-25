@@ -1,7 +1,5 @@
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-build/
+node_modules/
 dist/
-*.spec
+.vite/
+*.log
+.DS_Store

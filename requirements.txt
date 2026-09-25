@@ -1,4 +1,4 @@
-pygame>=2.6,<3
+pygame-ce>=2.5.5,<3
 pymunk>=7.0,<8
 pygame_gui>=0.6.14,<1
 imageio>=2.37,<3

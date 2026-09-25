@@ -1,0 +1,1 @@
+const buttons=document.querySelectorAll<HTMLButtonElement>(".nav-item");const title=document.getElementById("page-title");buttons.forEach(button=>button.addEventListener("click",()=>{buttons.forEach(item=>item.classList.remove("active"));button.classList.add("active");const page=button.dataset.page??"game";if(title)title.textContent=page.toUpperCase();}));

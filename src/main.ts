@@ -1,0 +1,14 @@
+import"./styles.css";import{Game,type UpgradeChoice}from"./game/Game";
+const $=<T extends HTMLElement>(id:string)=>document.getElementById(id)as T;
+const game=new Game($("game")),menu=$("menu"),hud=$("hud"),settings=$("settings"),upgrade=$("upgrade"),death=$("death");
+const fov=$<HTMLInputElement>("fov"),sens=$<HTMLInputElement>("sens"),quality=$<HTMLSelectElement>("quality");
+fov.value=String(game.settings.fov);sens.value=String(game.settings.sensitivity);quality.value=game.settings.quality;$("fovValue").textContent=fov.value;$("sensValue").textContent=sens.value;
+$<HTMLButtonElement>("playBtn").onclick=()=>{menu.classList.add("hidden");hud.classList.remove("hidden");game.start()};
+$<HTMLButtonElement>("settingsBtn").onclick=()=>settings.classList.remove("hidden");
+$<HTMLButtonElement>("closeSettings").onclick=()=>{game.setSettings({fov:Number(fov.value),sensitivity:Number(sens.value),quality:quality.value as"low"|"medium"|"high"});settings.classList.add("hidden")};
+fov.oninput=()=>$("fovValue").textContent=fov.value;sens.oninput=()=>$("sensValue").textContent=sens.value;
+$<HTMLButtonElement>("restartBtn").onclick=()=>{death.classList.add("hidden");hud.classList.remove("hidden");game.restart()};
+game.onHud=()=>{$("district").textContent=String(game.district).padStart(2,"0");$("wave").textContent=String(game.enemies.wave);$("score").textContent=String(game.score).padStart(6,"0");$("indirect").textContent=String(game.indirect);$("hpText").textContent=Math.ceil(game.player.hp)+" / "+game.player.maxHp;($("hpBar")as HTMLElement).style.width=Math.max(0,game.player.hp/game.player.maxHp*100)+"%";$("dashText").textContent=game.player.dashCooldown<=0?"DASH PRÊT":"DASH "+game.player.dashCooldown.toFixed(1)+"s";$("comboText").textContent=game.spells.comboText;$("spellBar").innerHTML=game.spells.spells.map((s,i)=>{const cd=game.spells.cooldowns.get(s.id)??0;return'<div class="spell '+(game.spells.selected===i?"active":"")+'"><div class="key">'+(i+1)+'</div><div class="name">'+s.name.toUpperCase()+'</div><div class="cd">'+(cd>0?cd.toFixed(1)+"s":"PRÊT")+"</div></div>"}).join("")};
+game.onUpgrade=(choices:UpgradeChoice[])=>{hud.classList.add("hidden");upgrade.classList.remove("hidden");const cards=$("upgradeCards");cards.innerHTML="";for(const c of choices){const b=document.createElement("button");b.className="card";b.innerHTML="<strong>"+c.title+"</strong><span>"+c.text+"</span>";b.onclick=()=>{upgrade.classList.add("hidden");hud.classList.remove("hidden");game.chooseUpgrade(c)};cards.appendChild(b)}};
+game.onDeath=()=>{hud.classList.add("hidden");death.classList.remove("hidden");$("deathStats").textContent="Score "+game.score.toLocaleString("fr-FR")+" • indirect "+game.indirect+" • record "+game.progress.bestScore.toLocaleString("fr-FR")};
+game.loop(performance.now());

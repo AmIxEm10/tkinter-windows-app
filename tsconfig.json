@@ -1,1 +1,0 @@
-{"compilerOptions":{"target":"ES2020","module":"none","strict":true,"outDir":"./src","rootDir":"./src","removeComments":true},"include":["src/**/*.ts"],"exclude":["node_modules"]}

@@ -1,0 +1,4 @@
+pygame
+pymunk
+pygame_gui
+pyinstaller
